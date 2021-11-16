@@ -115,6 +115,7 @@ server <- function(input, output, session) {
   ### portal table information for annotations later
   tables <- list()
   cv_terms <- tibble()
+  cv_mapping <-  tibble()
 
   ## SYNAPSE LOGIN ############
   session$sendCustomMessage(type = "read_cookie", message = list())
@@ -128,9 +129,13 @@ server <- function(input, output, session) {
       display_quickview(output, tables)
 
       # get controlled-vocabulary list
-      cv_terms <<- get_synapse_annotations("syn25322361", syn) %>% 
+      cv_terms <<- get_synapse_annotations("syn26433610", syn) %>% 
         select(key, value, columnType) %>% 
+        mutate(columnType = replace_na(columnType,  "STRING")) %>%
         unique()
+      cv_mapping <<- get_synapse_annotations("syn26433610", syn) %>%
+         select(key, value, existing) %>%
+         unique()
       output$terms <- DT::renderDT(
         cv_terms,
         options = list(pageLength = 50) 
@@ -199,7 +204,7 @@ server <- function(input, output, session) {
       ) 
 
     ### Rancho provides some cols we don't need, so remove them
-    manifest <<- manifest[, !(names(manifest) %in% c("Rancho comments", "tumorType_"))]
+    manifest <<- manifest[, !(names(manifest) %in% c("Rancho comments", "Rancho Comments"))]
 
     ### Show warning if uploaded manifest is empty
     if (nrow(manifest) == 0) {
