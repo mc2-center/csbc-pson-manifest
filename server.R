@@ -131,10 +131,12 @@ server <- function(input, output, session) {
       # get controlled-vocabulary list
       cv_terms <<- get_synapse_annotations("syn26433610", syn) %>% 
         select(key, value, columnType) %>% 
-        mutate(columnType = replace_na(columnType,  "STRING")) %>%
+        mutate(columnType = tidyr::replace_na(columnType,  "STRING")) %>%
         unique()
       cv_mapping <<- get_synapse_annotations("syn26433610", syn) %>%
          select(key, value, existing) %>%
+         mutate(existing = strsplit(existing, ";")) %>%
+         tidyr::unnest(existing) %>%
          unique()
       output$terms <- DT::renderDT(
         cv_terms,
