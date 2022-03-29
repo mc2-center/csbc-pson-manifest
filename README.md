@@ -16,6 +16,8 @@
 
 ## Usage
 Before accessing the app, you must be logged into [Synapse](https://www.synapse.org) first. If you do not have an account yet, create one [here](https://www.synapse.org/#!RegisterAccount:0).
+  
+Once you are logged in, you may start validating and uploading your manifests on the [validator app](https://shinypro.synapse.org/users/vchung/csbc-pson-manifest/)!
 
 
 #### See also:
